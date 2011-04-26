@@ -40,22 +40,29 @@
 
 ;;; Clojure
 (add-hook 'clojure-mode-hook 'paredit-mode)
-;; (require 'clojure-refactoring-mode)
+
+(require 'clojure-refactoring-mode)
+
+(add-hook 'clojure-refactoring-mode-hook
+          (lambda ()
+            ;; C-c f for FACTOR!
+            (local-set-key "\C-cf" 'clojure-refactoring-ido)))
+
 ;; symbols for some overlong function names
-(eval-after-load 'clojure-mode
-  '(font-lock-add-keywords
-    'clojure-mode
-    (mapcar
-     (lambda (pair)
-       `(,(car pair)
-         (0 (progn (compose-region
-                    (match-beginning 0) (match-end 0)
-                    ,(cadr pair))
-                   nil))))
-     `(("\\<fn\\>" ,(make-char 'greek-iso8859-7 107))
-       ("\\<comp\\>" ?∘)
-       ("\\<partial\\>" ?þ)
-       ("\\<complement\\>" ?¬)))))
+;; (eval-after-load 'clojure-mode
+;;   '(font-lock-add-keywords
+;;     'clojure-mode
+;;     (mapcar
+;;      (lambda (pair)
+;;        `(,(car pair)
+;;          (0 (progn (compose-region
+;;                     (match-beginning 0) (match-end 0)
+;;                     ,(cadr pair))
+;;                    nil))))
+;;      `(("\\<fn\\>" ,(make-char 'greek-iso8859-7 107))
+;;        ("\\<comp\\>" ?∘)
+;;        ("\\<partial\\>" ?þ)
+;;        ("\\<complement\\>" ?¬)))))
 
 ;; Google-weather for org-mode
 
@@ -112,6 +119,8 @@
 (setq org-directory "~/Organiser")
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 (define-key global-map "\C-cr" 'org-remember)
+
+(setq org-stuck-projects '("+PROJECT/" ("NEXT" "TODO") ("-MAYBE")))
 
 ;;; Browser setup
 (setq browse-url-browser-function 'browse-url-firefox
